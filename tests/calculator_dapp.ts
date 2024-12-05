@@ -26,4 +26,59 @@ describe('calculator', () => {
     const account = await calculatorProgram.account.calculator.fetch(calculator.publicKey);
     assert.ok(account.greeting === "Welcome to solana");
   });
+
+  it('ADD TWO NUMBERS', async () => {
+    // Call the add method
+    await calculatorProgram.rpc.add(new anchor.BN(10), new anchor.BN(2), {
+      accounts: {
+        calculator: calculator.publicKey,
+      },
+    });
+    
+    // Fetch the account and validate
+    const account = await calculatorProgram.account.calculator.fetch(calculator.publicKey);
+    assert.ok(account.result.eq(new anchor.BN(12)));
+  })
+
+
+  it ('SUBTRACT TWO NUMBERS', async () => { 
+    // Call the subtract method
+    await calculatorProgram.rpc.subtract(new anchor.BN(10), new anchor.BN(2), {
+      accounts: {
+        calculator: calculator.publicKey,
+      },
+    });
+
+    // Fetch the account and validate
+    const account = await calculatorProgram.account.calculator.fetch(calculator.publicKey);
+    assert.ok(account.result.eq(new anchor.BN(8)));
+  })
+
+  it ('MULTIPLY TWO NUMBERS', async () => {  
+    // Call the multiply method
+    await calculatorProgram.rpc.multiply(new anchor.BN(10), new anchor.BN(2), {
+      accounts: {
+        calculator: calculator.publicKey,
+      },
+    });
+
+    // Fetch the account and validate
+    const account = await calculatorProgram.account.calculator.fetch(calculator.publicKey);
+    assert.ok(account.result.eq(new anchor.BN(20)));
+  })
+  
+  it('DIVIDE TWO NUMBERS', async () => {
+  // Call the divide method
+  await calculatorProgram.rpc.divide(new anchor.BN(10), new anchor.BN(2), {
+    accounts: {
+      calculator: calculator.publicKey,
+    },
+  });
+
+  // Fetch the account and validate
+  const account = await calculatorProgram.account.calculator.fetch(calculator.publicKey);
+  assert.ok(account.result.eq(new anchor.BN(5)));
+  assert.ok(account.remainder.eq(new anchor.BN(0)));
+});
+
 });
