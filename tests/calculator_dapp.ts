@@ -1,16 +1,29 @@
-import * as anchor from "@coral-xyz/anchor";
-import { Program } from "@coral-xyz/anchor";
-import { CalculatorDapp } from "../target/types/calculator_dapp";
+const assert = require('assert');
+const anchor = require('@coral-xyz/anchor');
+const { SystemProgram } = anchor.web3;
 
-describe("calculator_dapp", () => {
-  // Configure the client to use the local cluster.
-  anchor.setProvider(anchor.AnchorProvider.env());
+describe('calculator', () => {
+  // Configure the provider
+  const provider = anchor.AnchorProvider.local();
+  anchor.setProvider(provider);
 
-  const program = anchor.workspace.CalculatorDapp as Program<CalculatorDapp>;
+  // Generate keypair and fetch program
+  const calculator = anchor.web3.Keypair.generate();
+  const calculatorProgram = anchor.workspace.calculator_dapp;
 
-  it("Is initialized!", async () => {
-    // Add your test here.
-    const tx = await program.methods.initialize().rpc();
-    console.log("Your transaction signature", tx);
+  it('CREATE A CALCULATOR', async () => {
+    // Call the create method
+    await calculatorProgram.rpc.create("Welcome to solana", {
+      accounts: {
+        calculator: calculator.publicKey,
+        user: provider.wallet.publicKey,
+        systemProgram: SystemProgram.programId,
+      },
+      signers: [calculator],
+    });
+
+    // Fetch the account and validate
+    const account = await calculatorProgram.account.calculator.fetch(calculator.publicKey);
+    assert.ok(account.greeting === "Welcome to solana");
   });
 });

@@ -4,8 +4,6 @@ declare_id!("4LSZiXMKLkGeAmX6NMwWmoNn3Nna19HMT6i8iuxo8c76");
 
 #[program]
 pub mod calculator_dapp {
-    use anchor_lang::solana_program::entrypoint::ProgramResult;
-
     use super::*;
     pub fn create(ctx: Context<Create>, init_message: String) -> ProgramResult {
         let calculator = &mut ctx.accounts.calculator;
