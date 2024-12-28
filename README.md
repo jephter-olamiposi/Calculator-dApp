@@ -25,29 +25,29 @@ Before using the dApp, ensure you have the following installed:
 ## Installation
 Clone the repository:
 
-`
+```
 git clone https://github.com/jephter-olamiposi/Calculator-dApp.git
 cd Calculator-dApp
-`
+```
 Install dependencies:
-`
+```
 yarn install
-`
+```
 
 Build the program:
 
-`
+```
 anchor build
-`
+```
 
 Running Tests
 - The project includes comprehensive tests written in TypeScript. To run the tests:
 
 Build the program:
-`
+```
 anchor build
-`
+```
 Execute the tests:
-`
+```
 anchor test
-`
+```
