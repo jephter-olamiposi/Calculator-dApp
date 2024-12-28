@@ -11,3 +11,5 @@ migrations
 *.json 
 yarn.lock
 Cargo.lock
+.prettierignore
+.yarnrc.yml
