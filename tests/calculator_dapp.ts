@@ -1,84 +1,94 @@
-const assert = require('assert');
-const anchor = require('@coral-xyz/anchor');
-const { SystemProgram } = anchor.web3;
+import * as anchor from "@coral-xyz/anchor";
+import { Program } from "@coral-xyz/anchor";
+import { assert } from "chai";
 
-describe('calculator', () => {
-  // Configure the provider
-  const provider = anchor.AnchorProvider.local();
+describe("calculator_dapp", () => {
+  // Configure the client to use the local provider.
+  const provider = anchor.AnchorProvider.env();
   anchor.setProvider(provider);
 
-  // Generate keypair and fetch program
+  const program = anchor.workspace.CalculatorDapp as Program<any>;
   const calculator = anchor.web3.Keypair.generate();
-  const calculatorProgram = anchor.workspace.calculator_dapp;
 
-  it('CREATE A CALCULATOR', async () => {
+  it("Creates a calculator", async () => {
     // Call the create method
-    await calculatorProgram.rpc.create("Welcome to solana", {
-      accounts: {
+    await program.methods
+      .create("Welcome to Solana")
+      .accounts({
         calculator: calculator.publicKey,
         user: provider.wallet.publicKey,
-        systemProgram: SystemProgram.programId,
-      },
-      signers: [calculator],
-    });
+        systemProgram: anchor.web3.SystemProgram.programId,
+      })
+      .signers([calculator])
+      .rpc();
 
     // Fetch the account and validate
-    const account = await calculatorProgram.account.calculator.fetch(calculator.publicKey);
-    assert.ok(account.greeting === "Welcome to solana");
+    const account = await program.account.calculator.fetch(calculator.publicKey);
+    assert.strictEqual(account.greeting, "Welcome to Solana");
   });
 
-  it('ADD TWO NUMBERS', async () => {
-    // Call the add method
-    await calculatorProgram.rpc.add(new anchor.BN(10), new anchor.BN(2), {
-      accounts: {
+  it("Adds two numbers", async () => {
+    await program.methods
+      .add(new anchor.BN(10), new anchor.BN(20))
+      .accounts({
         calculator: calculator.publicKey,
-      },
-    });
-    
-    // Fetch the account and validate
-    const account = await calculatorProgram.account.calculator.fetch(calculator.publicKey);
-    assert.ok(account.result.eq(new anchor.BN(12)));
-  })
+      })
+      .rpc();
 
-
-  it ('SUBTRACT TWO NUMBERS', async () => { 
-    // Call the subtract method
-    await calculatorProgram.rpc.subtract(new anchor.BN(10), new anchor.BN(2), {
-      accounts: {
-        calculator: calculator.publicKey,
-      },
-    });
-
-    // Fetch the account and validate
-    const account = await calculatorProgram.account.calculator.fetch(calculator.publicKey);
-    assert.ok(account.result.eq(new anchor.BN(8)));
-  })
-
-  it ('MULTIPLY TWO NUMBERS', async () => {  
-    // Call the multiply method
-    await calculatorProgram.rpc.multiply(new anchor.BN(10), new anchor.BN(2), {
-      accounts: {
-        calculator: calculator.publicKey,
-      },
-    });
-
-    // Fetch the account and validate
-    const account = await calculatorProgram.account.calculator.fetch(calculator.publicKey);
-    assert.ok(account.result.eq(new anchor.BN(20)));
-  })
-  
-  it('DIVIDE TWO NUMBERS', async () => {
-  // Call the divide method
-  await calculatorProgram.rpc.divide(new anchor.BN(10), new anchor.BN(2), {
-    accounts: {
-      calculator: calculator.publicKey,
-    },
+    const account = await program.account.calculator.fetch(calculator.publicKey);
+    assert.strictEqual(account.result.toNumber(), 30);
   });
 
-  // Fetch the account and validate
-  const account = await calculatorProgram.account.calculator.fetch(calculator.publicKey);
-  assert.ok(account.result.eq(new anchor.BN(5)));
-  assert.ok(account.remainder.eq(new anchor.BN(0)));
-});
+  it("Subtracts two numbers", async () => {
+    await program.methods
+      .subtract(new anchor.BN(15), new anchor.BN(5))
+      .accounts({
+        calculator: calculator.publicKey,
+      })
+      .rpc();
 
+    const account = await program.account.calculator.fetch(calculator.publicKey);
+    assert.strictEqual(account.result.toNumber(), 10);
+  });
+
+  it("Multiplies two numbers", async () => {
+    await program.methods
+      .multiply(new anchor.BN(3), new anchor.BN(4))
+      .accounts({
+        calculator: calculator.publicKey,
+      })
+      .rpc();
+
+    const account = await program.account.calculator.fetch(calculator.publicKey);
+    assert.strictEqual(account.result.toNumber(), 12);
+  });
+
+  it("Divides two numbers", async () => {
+    await program.methods
+      .divide(new anchor.BN(20), new anchor.BN(4))
+      .accounts({
+        calculator: calculator.publicKey,
+      })
+      .rpc();
+
+    const account = await program.account.calculator.fetch(calculator.publicKey);
+    assert.strictEqual(account.result.toNumber(), 5);
+    assert.strictEqual(account.remainder.toNumber(), 0);
+  });
+
+  it("Handles division by zero", async () => {
+    try {
+      await program.methods
+        .divide(new anchor.BN(10), new anchor.BN(0))
+        .accounts({
+          calculator: calculator.publicKey,
+        })
+        .rpc();
+
+      assert.fail("Division by zero should throw an error");
+    } catch (err) {
+      assert.strictEqual(err.error.errorCode.number, 6000); // DivisionByZero error code
+      assert.strictEqual(err.error.errorMessage, "Division by zero is not allowed.");
+    }
+  });
 });
