@@ -1,23 +1,61 @@
-# Calculator DApp
-This is a decentralized application (DApp) built on the Solana blockchain using the Anchor framework. The Calculator DApp allows users to interact with a blockchain-based calculator that performs basic arithmetic operations such as addition, subtraction, multiplication, and division.
+Calculator dApp
+A Solana-based decentralized application (dApp) for performing basic arithmetic operations (addition, subtraction, multiplication, division) using the Anchor framework. This dApp includes custom error handling, such as for division by zero, and is designed for local testing and development.
 
-# Features
-- Create a Calculator Account: Users can create a calculator account with a custom greeting message.
-- Arithmetic Operations: Perform addition, subtraction, multiplication, and division operations on-chain.
-- Solana Blockchain: Leverages the speed and security of the Solana network for fast and reliable calculations.
-- Anchor Framework: Uses Anchor for smart contract development, making it easier to build and test Solana programs.
+Features
+Perform basic arithmetic operations:
+Addition
+Subtraction
+Multiplication
+Division (with remainder)
+Handles division by zero with a custom error message.
+Includes comprehensive TypeScript tests for local validation.
+Prerequisites
+Before using the dApp, ensure you have the following installed:
 
-# Prerequisites
-- Before you begin, ensure you have the following installed on your machine:
+Rust (Version 1.75.0 or later)
+Solana CLI (Version 1.16.0 or later)
+Anchor CLI (Version 0.30.0 or later)
+Node.js (Version 14 or later)
+Yarn
+Installation
+Clone the repository:
 
-# Software Requirements:
-- Rust: Required for building the Solana program.
-- Solana CLI: A command-line tool for interacting with the Solana blockchain.
-- Anchor CLI: Framework for building Solana programs efficiently.
-- Node.js: JavaScript runtime for backend logic.
-- Yarn: Dependency manager for JavaScript projects.
+bash
+Copy code
+git clone https://github.com/jephter-olamiposi/Calculator-dApp.git
+cd Calculator-dApp
+Install dependencies:
 
-# Usage
-- Creating a Calculator: Users can create a new calculator account with a custom greeting message.
-- Performing Operations: Users can interact with the calculator to perform basic arithmetic operations. The results are stored and managed on the Solana blockchain.
+bash
+Copy code
+yarn install
+Build the program:
 
+bash
+Copy code
+anchor build
+Usage
+This project is designed for local testing only and does not require deployment.
+
+Local Testing
+Run the provided TypeScript tests:
+
+bash
+Copy code
+anchor test
+Example Output:
+
+Each test verifies the correctness of the arithmetic operations (add, subtract, multiply, divide) and custom error handling for division by zero.
+Running Tests
+The project includes comprehensive tests written in TypeScript. To run the tests:
+
+Build the program:
+
+bash
+Copy code
+anchor build
+Execute the tests:
+
+bash
+Copy code
+anchor test
