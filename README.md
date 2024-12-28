@@ -17,7 +17,7 @@ A Solana-based decentralized application (dApp) for performing basic arithmetic 
 ## Prerequisites
 Before using the dApp, ensure you have the following installed:
 - Rust (Version 1.75.0 or later)
-- Solana CLI (Version 1.16.0 or later)
+- Solana CLI (Version 1.18.22 or later)
 - Anchor CLI (Version 0.30.0 or later)
 - Node.js (Version 14 or later)
 - Yarn
